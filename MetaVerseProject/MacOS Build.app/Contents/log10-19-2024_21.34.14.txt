@@ -1,0 +1,3 @@
+21:34:26: YiweiFeng created room Test
+21:34:27: YiweiFeng joined the room
+21:34:47: YiweiFeng wrote in the chat: "Hi"
