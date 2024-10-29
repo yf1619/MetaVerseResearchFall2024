@@ -1,73 +1,90 @@
-using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Small controller to easier position camera in debug builds.
+/// Prod build shoud use static camera.
+/// </summary>
+[RequireComponent(typeof(Camera))]
 public class CameraController : MonoBehaviour
 {
-    public GameObject target;
-    private Vector3 height = new Vector3(0, 0.8f, 0);
-    private Vector3 startPosition = new Vector3(0, 1, -9.99f);
-    private Vector3 offset = Vector3.zero;
+  public float speed = 1.0f;
+  public float shiftSpeed = 2.0f;
+  public float mouseSensitivity = 0.25f;
+  private Vector3 lastMouse = new Vector3(255, 255, 255); //kind of in the middle of the screen, rather than at the top (play)
 
-    private bool showNames = true;
 
-    public Vector3 start;
-    public Vector3 end;
-    public float movementSpeed = 5f;
-    private float scrollValue;
-
-    void LateUpdate()
+  void Update()
+  {
+    if (MyUtils.IsDebugRelease)
     {
-        if (target == null && this.transform.position == startPosition)
-        {
-            return;
-        }
-
-        else if (target == null && this.transform.position != startPosition) {
-            transform.position = startPosition;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-            return;
-        }
-
-        transform.position = target.transform.position + height + offset;
-        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, target.transform.rotation.eulerAngles.y, transform.eulerAngles.z);
-
-        if(Input.GetKeyUp(KeyCode.LeftShift) && showNames == true)
-        {
-            foreach (GameObject name in GameObject.FindGameObjectsWithTag("PlayerName"))
-                name.GetComponent<TMP_Text>().enabled = false;            
-            showNames = false;
-        }
-
-        else if (Input.GetKeyUp(KeyCode.LeftShift) && showNames == false)
-        {
-            foreach (GameObject name in GameObject.FindGameObjectsWithTag("PlayerName"))
-                name.GetComponent<TMP_Text>().enabled = true;
-            showNames = true;
-        }
-
-        scrollValue = Input.GetAxis("Mouse ScrollWheel") * movementSpeed;
-        if (scrollValue != 0)
-        {
-            Debug.Log("scrool value " + scrollValue);
-            Camera camera = GetComponent<Camera>();
-
-            float currentFOV = camera.fieldOfView;
-            float targetFOV = Mathf.Clamp(currentFOV - (scrollValue), 10f, 60f);
-
-            float lerpValue = Mathf.InverseLerp(10f, 60f, targetFOV);
-            float interpolatedFOV = Mathf.Lerp(10f, 60f, lerpValue);
-
-            camera.fieldOfView = interpolatedFOV;
-        }
-
-        /*if(Input.GetKeyUp(KeyCode.F1) && offset.Equals(Vector3.zero))
-        {
-            offset = new Vector3(0, 0, -2);
-        }
-
-        else if (Input.GetKeyUp(KeyCode.F1) && !offset.Equals(Vector3.zero))
-        {
-            offset = Vector3.zero;
-        }*/
+      UpdateRotationFreeCamera();
+      UpdatePositionFreeCamera();
     }
+  }
+
+  private void UpdateRotationFreeCamera()
+  {
+    if (Input.GetMouseButton(0))
+    {
+      var delta = Input.mousePosition - lastMouse;
+      delta = new Vector3(-delta.y * mouseSensitivity, delta.x * mouseSensitivity, 0);
+      transform.eulerAngles = new Vector3(
+        transform.eulerAngles.x + delta.x,
+        transform.eulerAngles.y + delta.y,
+        0
+      );
+    }
+    lastMouse = Input.mousePosition;
+  }
+
+  private void UpdatePositionFreeCamera()
+  {
+    Vector3 move = GetMoveVectorFrom_WSAD();
+    if (move.sqrMagnitude > 0)
+    {
+      var camera = GetComponent<Camera>();
+      var speed2 = Input.GetKey(KeyCode.LeftShift) ? shiftSpeed : speed;
+      move *= speed2 * Time.deltaTime;
+
+      if (camera.orthographic)
+      {
+        camera.orthographicSize += -0.5f * move.z;
+        move.z = 0;
+      }
+      transform.Translate(move);
+    }
+  }
+
+  private Vector3 GetMoveVectorFrom_WSAD()
+  {
+    Vector3 move = new Vector3();
+    if (Input.GetKey(KeyCode.W))
+    {
+      move += Vector3.forward;
+    }
+    if (Input.GetKey(KeyCode.S))
+    {
+      move += Vector3.back;
+    }
+    if (Input.GetKey(KeyCode.A))
+    {
+      move += Vector3.left;
+    }
+    if (Input.GetKey(KeyCode.D))
+    {
+      move += Vector3.right;
+    }
+    if (Input.GetKey(KeyCode.Space))
+    {
+      move += Vector3.up;
+    }
+    if (Input.GetKey(KeyCode.Z))
+    {
+      move += Vector3.down;
+    }
+    return move;
+  }
 }

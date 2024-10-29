@@ -100,6 +100,8 @@ public class OVRLipSyncContextBase : MonoBehaviour
     /// </summary>
     void Awake()
     {
+        // Debug.Log(name + " audioSource: " + audioSource);
+
         // Cache the audio source we are going to be using to pump data to the SR
         if (!audioSource)
         {
@@ -161,6 +163,8 @@ public class OVRLipSyncContextBase : MonoBehaviour
     /// <param name="amount">Integer viseme amount</param>
     public void SetVisemeBlend(int viseme, int amount)
     {
+
+        Debug.Log(name + " SetVisemeBlend " + viseme + " (" + amount + ")"); // This is fn is only called from dbg
         OVRLipSync.Result result =
             OVRLipSync.SendSignal(context, OVRLipSync.Signals.VisemeAmount, viseme, amount);
 
