@@ -1,6 +1,7 @@
 using UnityEngine;
 using NativeWebSocket;
 //This file is sepcific to AI-backend connection.
+//The connection command must be: python server.py --port 8080
 //This file is created to maintain the connection with the server and to receive the messages from the server.
 public class WebSocketConnection : MonoBehaviour {
     WebSocket websocket;
