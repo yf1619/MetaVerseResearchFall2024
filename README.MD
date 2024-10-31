@@ -3,7 +3,7 @@
 ## Members
 
 - **Yiwei Feng** (University at Buffalo CSE undergraduate student)
-- **WanXian Chen** (University at Buffalo CSE undergraduate student)
+- **Adi Dwibedi** (University at Buffalo CSE postgraduate student)
 - **Sreyasee Das Bhattacharjee** (Assistant Professor of Teaching)
 
 ## Related Repositories
@@ -19,50 +19,51 @@
 ## Repository Structure
 
 - **MetaVerseProject**:  
-  The project edited to implement AI avatars interacting in a metaverse environment.  
-  In the directory, there is also readme to describe the project.
+  The project aiming to implement AI avatars(AI-iris-Avatr) interacting in a metaverse(SENEM_Metaverse) environment.
 
 - **PaperResource**:  
-  Contains the papers referenced for the research project.
+  Contains the papers and medium article referenced for the research project.
 
 - **PresentationFiles**:  
   Slides and visuals for the final presentation.
 
 - **AIIrisAvatorExportPackage**:  
-  The package file exported from AllrisAvatorExportPackage.
+  The package file exported from AllrisAvatorExportPackage which is the imported package of integration plan step 1.
 
 - **server**:  
-  The AI-backend server from the Iris-aviator project.
+  The AI-backend server required to run locally to set
+  AI avatar from the AI-Iris-aviator project connecting to the
+  local backend server .
 
 ---
 
 ## Integration Plan: AI-Iris-Avatar and SENEM Metaverse Projects
 
-To integrate both the **AI-Iris-Avatar** and the **SENEM Metaverse** projects in Unity, follow this structured plan to ensure both projects are prepared and work together seamlessly.
+To integrate the **AI-Iris-Avatar** to the **SENEM Metaverse** projects in Unity, follow this structured plan to ensure both projects are prepared and work together seamlessly.
 
-### **Step 1: Prepare the AI-Iris-Avatar Unity Project**
+### **Step 1: Prepare the AI-Iris-Avatar Unity Project(Issues exist)**
 
 1. **Open the AI-Iris-Avatar project** in Unity.
 2. **Select Dependencies:**
    - In the **Assets** window, right-click the necessary files (such as models, scripts, and prefabs) and choose **Select Dependencies** to ensure all required components are selected for export.
-3. **Export as Unity Package:**
+3. **Export as Unity Package(**Accomplished**):**
 
    - Go to **File → Export Package** and ensure all necessary assets are checked.
    - Save the package as `AI_Iris_Avatar.unitypackage`.
 
-4. **Test the Package:**
+4. **Test the Package:( **issues** from concole due to the compatibility issue)**
    - Open a new Unity project and import the package to ensure there are no missing dependencies.
 
 ---
 
-### **Step 2: Prepare the SENEM Metaverse Unity Project**
+### **Step 2: Prepare the SENEM Metaverse Unity Project(Issue exist)**
 
 1. **Open the SENEM Metaverse project** in Unity.
-2. **Organize Project Hierarchy:**
+2. **Organize Project Hierarchy(Foler created):**
    - Create a folder in the **Assets** window (e.g., `AI_Avatar`) where the AI avatar and related assets will reside.
-3. **Set Up Unity Version Compatibility:**
+3. **Set Up Unity Version Compatibility(Issues exist in the console of Unity):**
    - Confirm that both projects use **the same Unity version** to avoid compatibility issues (e.g., 2022.3.21f1 as recommended in the AI-Iris-Avatar documentation).
-4. **Install Required Plugins and Libraries:**
+4. **Install Required Plugins and Libraries(Accomplished : two libararies are installed):**
    - Import the **Oculus Lipsync** library from the Unity Asset Store or GitHub to support avatar lip-sync functionality.
    - Add the **NativeWebSocket package** if you plan to use WebSocket for communication between the avatar and backend servers.
 
@@ -70,10 +71,10 @@ To integrate both the **AI-Iris-Avatar** and the **SENEM Metaverse** projects in
 
 ### **Step 3: Import the AI-Iris-Avatar into the SENEM Metaverse Project**
 
-1. **Import the Package:**
+1. **Import the Package(Accomplished):**
    - In the SENEM Metaverse project, go to **Assets → Import Package → Custom Package**.
    - Select the `AI_Iris_Avatar.unitypackage` you created earlier and import it.
-2. **Verify Prefabs and Assets:**
+2. **Verify Prefabs and Assets(No asset appears):**
    - Check that all models, scripts, and prefabs have been imported correctly without any missing files.
 
 ---
@@ -81,17 +82,28 @@ To integrate both the **AI-Iris-Avatar** and the **SENEM Metaverse** projects in
 ### **Step 4: Backend and Communication Setup**
 
 1. **Launch the AI Server:**
+
    - Navigate to the **AI-Iris-Avatar** backend folder and run the Python server with:
      ```bash
      python server.py --port 8080
      ```
-2. **WebSocket Configuration:**
 
-   - In the Unity project, set up WebSocket connections to allow communication between the **SENEM Metaverse** and the **AI backend**. You can use the **NativeWebSocket** library to handle these connections:
+2. **WebSocket Configuration(Accomplished: File has been added ):**
 
-     - Add a C# script to open and maintain a WebSocket connection.
+   To add this code to `WebSocket.cs`, ensure that the file supports Unity components and the NativeWebSocket library. The provided code is designed for Unity's MonoBehaviour, which might not align with the existing structure in `WebSocket.cs`.
+
+   Instead, you can create a new script file specifically for handling WebSocket connections within Unity. Here is how you can proceed:
+
+   - **Create a New Script:**
+
+     - Create a new C# script in your Unity project, for example, `WebSocketConnection.cs`.
+
+   - **Implement the WebSocket Connection:**
+
+     - Add the provided code to this new script. Here is the complete script for `WebSocketConnection.cs`:
 
      ```csharp
+     using UnityEngine;
      using NativeWebSocket;
 
      public class WebSocketConnection : MonoBehaviour {
@@ -104,13 +116,26 @@ To integrate both the **AI-Iris-Avatar** and the **SENEM Metaverse** projects in
              };
              await websocket.Connect();
          }
+
+         void Update() {
+             #if !UNITY_WEBGL || UNITY_EDITOR
+             websocket?.DispatchMessageQueue();
+             #endif
+         }
+
+         private async void OnApplicationQuit() {
+             await websocket.Close();
+         }
      }
      ```
 
-3. **Sync Lip Sync with Audio:**
-   - Configure the **Oculus Lipsync library** to synchronize avatar lip movements with audio generated by the text-to-speech (TTS) module of the AI server.
+   - **Attach the Script to a GameObject(Not sure how to attach the script to the GameObject):**
+     - Attach this script to a GameObject in your Unity scene to initialize the WebSocket connection when the scene starts.
 
----
+   By following these steps, you can maintain a connection to the AI backend without directly modifying `WebSocket.cs` in a way that might conflict with its existing functionality.
+
+3. **Sync Lip Sync with Audio(Not yet implemented):**
+   - Configure the **Oculus Lipsync library** to synchronize avatar lip movements with audio generated by the text-to-speech (TTS) module of the AI server.
 
 ### **Step 5: Test and Debug**
 
