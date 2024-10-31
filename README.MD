@@ -6,6 +6,11 @@
 - **WanXian Chen** (University at Buffalo CSE undergraduate student)
 - **Sreyasee Das Bhattacharjee** (Assistant Professor of Teaching)
 
+## Related Repositories
+
+- **AI-Avatar Repository Used**: [https://github.com/Scthe/ai-iris-avatar.git](https://github.com/Scthe/ai-iris-avatar.git)
+- **MetaVerse Classroom Repository Used**: [https://github.com/vipenti/SENEM_Metaverse.git](https://github.com/vipenti/SENEM_Metaverse.git)
+
 ## Repository Structure
 
 - **MetaVerseProject**:  
@@ -16,6 +21,12 @@
 
 - **PresentationFiles**:  
   Slides and visuals for the final presentation.
+
+- **AIIrisAvatorExportPackage**:  
+  The package file exported from AllrisAvatorExportPackage.
+
+- **server**:  
+  The AI-backend server from the Iris-aviator project.
 
 ---
 
