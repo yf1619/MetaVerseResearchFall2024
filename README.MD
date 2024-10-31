@@ -8,13 +8,19 @@
 
 ## Related Repositories
 
-- **AI-Avatar Repository Used**: [https://github.com/Scthe/ai-iris-avatar.git](https://github.com/Scthe/ai-iris-avatar.git)
-- **MetaVerse Classroom Repository Used**: [https://github.com/vipenti/SENEM_Metaverse.git](https://github.com/vipenti/SENEM_Metaverse.git)
+- **AI-Avatar Repository Referenced**: [https://github.com/Scthe/ai-iris-avatar.git](https://github.com/Scthe/ai-iris-avatar.git)  
+  Unity3d version:2022.3.21f1
+
+# Main Project
+
+- **MetaVerse Classroom Repository Referenced**: [https://github.com/vipenti/SENEM_Metaverse.git](https://github.com/vipenti/SENEM_Metaverse.git)  
+  Unity3D version: 2021.3.22f1
 
 ## Repository Structure
 
 - **MetaVerseProject**:  
-  The project we edited to implement AI avatars interacting in a metaverse environment.
+  The project edited to implement AI avatars interacting in a metaverse environment.  
+  In the directory, there is also readme to describe the project.
 
 - **PaperResource**:  
   Contains the papers referenced for the research project.
@@ -124,19 +130,16 @@ To integrate both the **AI-Iris-Avatar** and the **SENEM Metaverse** projects in
 
 ---
 
-### **Issues between Oct 22 and Oct 29**
+### **问题描述与解决方案**
 
-1. **Version Mismatch and Missing Files:**
+现阶段目标实现 MetaVerseProject 中加入一个 NPC avatar，能够 AI 语音或文字回复用户的 text 输入。ai-avatar 仓库中已经完全实现了 avatar 回复用户，并且嘴唇同步动作。本地 server 将用户输入传入 server，内置了大语言模型。
 
-   - The **AI-Iris-Avatar** and **SENEM Metaverse** projects are on different Unity versions, which causes issues during import. Some files from the AI-Iris-Avatar project may not import properly into the SENEM Metaverse project.
-   - The **SENEM Metaverse** project uses an older Unity version. When opened with the latest Unity editor, it generates compilation errors.
+进度：yiweifeng 已经 根据 Integration Plan，进行操作 ，MetaVerseProject 已经 import 了 整个 ai-avatar project package 了，并添加了 NativeWebsocket.cs 连接 local python server 的文件。
+但是 MetaVerseProject asset 里面 找不到引入的任何素材。
 
-2. **Integrating the Iris Avatar as an NPC AI:**
-
-   - Adding the Iris avatar to the **SENEM Metaverse** requires several operations to be implemented to ensure it functions as a robust NPC with AI capabilities. This involves setting up appropriate animations, behaviors, and interactions within the metaverse.
-
-3. **WebSocket Connection Code Placement:**
-   - A key challenge is determining the appropriate place to add the C# code that opens and maintains the WebSocket connection. Proper placement is crucial to ensure seamless communication between the AI backend and the metaverse environment.
+- **问题 1**：如何解决 MetaVerseProject 的 Unity 版本兼容问题？当前尝试使用 Unity 2022.3.21f1 直接打开项目但出现 console 报错。是否可以通过版本更改解决？如果不可行，具体应更改哪个文件？
+  如果需要重新整合，可以从最初的 MetaVersProject，因为更改的文件并不多。
+- **问题 2**：ai-avatar 仓库内容是否包含了整个 avatar 直接可设置到场景中？还是仅包含素材需要在 MetaVerseProject 中自行创建 NPC？
 
 ---
 
